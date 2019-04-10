@@ -6,7 +6,7 @@
 # into a CSV, creates CR's from CSV metadata, deploys the operator with the
 # OLM in a local cluster, and runs the SDK scorecard against the operator.
 
-set -ex
+set -e
 
 for f in "$(cd "$(dirname ${BASH_SOURCE[0]})/.." && pwd)"/lib/*; do
   . "$f"
@@ -122,6 +122,7 @@ wait_on_deployment "$DEP_NAME" "$NAMESPACE"
 # TODO: run against multiple CR's. Right now the scorecard only works with one
 # CR.
 for cr_file in $(find "$CR_DIR" -name "*.cr.yaml" -print -quit); do
+  echo "Running operator-sdk scorecard against "$CSV_FILE" with "$cr_file""
   operator-sdk scorecard \
     --cr-manifest "$cr_file" \
     --crds-dir "$ABS_BUNDLE_PATH" \
